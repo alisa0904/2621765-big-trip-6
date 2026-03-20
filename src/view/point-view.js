@@ -38,6 +38,7 @@ const createPointTemplate = (point, offers, destination) => {
     : '';
 
   return `
+  <ul class="trip-events__list">
     <li class="trip-events__item">
       <div class="event">
         <time class="event__date" datetime="${dateFrom || ''}">${dateOnly}</time>
@@ -72,6 +73,7 @@ const createPointTemplate = (point, offers, destination) => {
         </button>
       </div>
     </li>
+  </ul>
   `;
 };
 
