@@ -3,8 +3,9 @@ import { render} from '../src/framework/render.js';
 import EmptyListView from '../src/view/empty-list-view.js';
 import PointPresenter from './point-presenter.js';
 import { updateItem } from '../src/util.js';
-import { sortTaskUp,sortTaskDown } from '../src/util.js';
+//import { sortTaskUp,sortTaskDown } from '../src/util.js';
 import { SortType } from '../src/const.js';
+import dayjs from 'dayjs';
 export default class TripPresenter {
   #tripEventsContainer = null;
   #pointsModel = null;
@@ -37,13 +38,7 @@ export default class TripPresenter {
 
     this.#renderBoard();
 
-    points.forEach((point) => {
-
-      const destination = this.#destinationsModel.getDestinationsById(point.destination);
-      const pointOffers = this.#offersModel.getOffersById(point.type, point.offers || []);
-
-      this.#renderPoint(point, destination, pointOffers);
-    });
+    this.#renderPoints();
   }
 
   #handleModeChange = () => {
@@ -71,21 +66,38 @@ export default class TripPresenter {
   #clearPointList() {
     this.#pointsPresenter.forEach((presenter) => presenter.destroy());
     this.#pointsPresenter.clear();
+
+    const pointElements = this.#tripEventsContainer.querySelectorAll('.trip-events__item');
+    pointElements.forEach((el) => el.remove());
   }
 
   #sortPoints(sortType) {
     switch (sortType) {
-      case SortType.DATE_UP:
-        this.#points.sort(sortTaskUp);
+      case SortType.DAY:
+        this.#points.sort((a, b) => dayjs(a.dateFrom).diff(dayjs(b.dateFrom)));
         break;
-      case SortType.DATE_DOWN:
-        this.#points.sort(sortTaskDown);
+      case SortType.TIME:
+        this.#points.sort((a, b) => {
+          const durA = dayjs(a.dateTo).diff(dayjs(a.dateFrom));
+          const durB = dayjs(b.dateTo).diff(dayjs(b.dateFrom));
+          return durB - durA;
+        });
+        break;
+      case SortType.PRICE:
+        this.#points.sort((a, b) => b.basePrice - a.basePrice);
         break;
       default:
         this.#points = [...this.#sourcedBoardTasks];
     }
-
     this.#currentSortType = sortType;
+  }
+
+  #renderPoints() {
+    this.#points.forEach((point) => {
+      const destination = this.#destinationsModel.getDestinationsById(point.destination);
+      const pointOffers = this.#offersModel.getOffersById(point.type, point.offers || []);
+      this.#renderPoint(point, destination, pointOffers);
+    });
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -95,6 +107,7 @@ export default class TripPresenter {
 
     this.#sortPoints(sortType);
     this.#clearPointList();
+    this.#renderPoints();
   };
 
   #renderBoard() {
