@@ -227,7 +227,6 @@ export default class NewEditFormView extends AbstractStatefulView {
     this.#allDestinations = allDestinations;
     this.#onCloseEditButtonClick = onCloseEditButtonClick;
     this.#onSubmitButtonClick = onSubmitButtonClick;
-    //this.#setEventListeners();
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditRollUp = onEditRollup;
     this._restoreHandlers();
@@ -240,6 +239,12 @@ export default class NewEditFormView extends AbstractStatefulView {
       this.#allOffers,
       this.#pointDestination,
       this.#allDestinations
+    );
+  }
+
+  reset(point) {
+    this.updateElement(
+      NewEditFormView.parsePointToState(point),
     );
   }
 

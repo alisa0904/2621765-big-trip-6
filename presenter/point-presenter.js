@@ -78,6 +78,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== MODE.DEFAULT) {
+      this.#editForm.reset(this.#point);
       this.#replaceEditPointToPaint();
     }
   }
@@ -85,6 +86,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
+      this.#editForm.reset(this.#point);
       this.#replaceEditPointToPaint();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
