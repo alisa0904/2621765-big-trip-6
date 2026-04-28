@@ -49,12 +49,9 @@ export default class PointPresenter {
       point: this.#point,
       typeOffers: currentTypeOffers,
       allOffers: allOffers,
-      pointDestination: this.#destination,
-      allDestinations: this.#destinations,
-      onCloseEditButtonClick: this.#onCloseEditButtonClick,
-      onSubmitButtonClick: this.#onSubmitButtonClick,
+      allDestinations: this.#destinationsModel.getDestinations(),
       onFormSubmit: this.#onSubmitButtonClick,
-      onEditRollup: this.#onCloseEditButtonClick,
+      onEditRollup: this.#onCloseEditButtonClick
     });
 
     if (!prevPointComponent || !prevEditComponent) {
